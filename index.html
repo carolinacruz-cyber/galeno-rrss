@@ -4,35 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Plantillas para generar textos de Instagram y X del GALENO Research Group.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d5a66'/%3E%3Ctext x='32' y='45' font-family='Arial' font-weight='700' font-size='38' text-anchor='middle' fill='white'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b7fb3'/%3E%3Ctext x='32' y='45' font-family='Arial' font-weight='700' font-size='38' text-anchor='middle' fill='white'%3EG%3C/text%3E%3C/svg%3E">
 <title>Publicaciones GALENO Research Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
 /* Layout: brand band → sticky tab bar → per-tab workspace (form left, live post previews right; stacks on phones) */
+/* Single light theme: white page; celeste for structure and actions, green and yellow for contrast accents */
 :root{
-  --bg:#eef3f2; --surface:#ffffff; --surface-2:#f6f9f8; --ink:#11272d; --muted:#566e73; --line:#d3dfdd;
-  --primary:#0d5a66; --primary-ink:#ffffff; --primary-soft:#dcecec; --accent:#d6a514; --accent-ink:#2a2003;
-  --ok:#1f7a45; --warn:#a86a00; --bad:#b3261e;
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f4fafd; --ink:#13303d; --muted:#557080; --line:#d6e6ee;
+  --primary:#0b7fb3; --primary-ink:#ffffff; --primary-soft:#e3f3fb; --celeste:#4fc3f7;
+  --green:#2e9e5b; --green-ink:#ffffff; --green-soft:#e5f5ec;
+  --yellow:#f5c518; --yellow-ink:#3a2f00; --yellow-soft:#fff6d1;
+  --accent:var(--yellow); --accent-ink:var(--yellow-ink);
+  --ok:#1f8a4c; --warn:#a86a00; --bad:#b3261e;
   --c-publicacion:#0d5a66; --c-tesis:#6a47b0; --c-eventos:#2c7a4b; --c-estancias:#2563a8; --c-proyectos:#a65512; --c-inside:#a3366c;
   --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body:"Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --radius:10px;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0b1a1d; --surface:#11262a; --surface-2:#0e2023; --ink:#e2eeee; --muted:#93acb0; --line:#244146;
-  --primary:#4fb6c3; --primary-ink:#06262b; --primary-soft:#163b40; --accent:#f0c445; --accent-ink:#2a2003;
-  --ok:#5ccf8a; --warn:#f0b54a; --bad:#ff8a80;
-  --c-publicacion:#4fb6c3; --c-tesis:#a98ff0; --c-eventos:#62c98c; --c-estancias:#6ea8ee; --c-proyectos:#ec9a55; --c-inside:#ea7fb2;
-  color-scheme:dark }}
-:root[data-theme="dark"]{
-  --bg:#0b1a1d; --surface:#11262a; --surface-2:#0e2023; --ink:#e2eeee; --muted:#93acb0; --line:#244146;
-  --primary:#4fb6c3; --primary-ink:#06262b; --primary-soft:#163b40; --accent:#f0c445; --accent-ink:#2a2003;
-  --ok:#5ccf8a; --warn:#f0b54a; --bad:#ff8a80;
-  --c-publicacion:#4fb6c3; --c-tesis:#a98ff0; --c-eventos:#62c98c; --c-estancias:#6ea8ee; --c-proyectos:#ec9a55; --c-inside:#ea7fb2;
-  color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
@@ -41,11 +34,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .wrap{max-width:1200px;margin:0 auto}
 h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* Brand band */
-.brand{background:var(--surface);border-bottom:1px solid var(--line)}
+.brand{background:var(--surface);border-bottom:1px solid var(--line);border-top:6px solid var(--celeste);border-image:linear-gradient(90deg,var(--celeste) 0 34%,var(--green) 34% 67%,var(--yellow) 67% 100%) 1}
 .brand .wrap{display:flex;align-items:center;gap:12px;padding-block:14px;flex-wrap:wrap}
 .mark{width:38px;height:38px;border-radius:9px;background:var(--primary);color:var(--primary-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:20px;flex:none}
 .brand-name{font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:.01em}
@@ -58,19 +51,23 @@ button,input,select,textarea{font:inherit;color:inherit}
 .tab{flex:none;border:0;background:transparent;padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
 .tab .dot{width:9px;height:9px;border-radius:50%;background:var(--cat,var(--muted))}
 .tab:hover{background:var(--surface-2);color:var(--ink)}
-.tab[aria-selected="true"]{background:var(--primary-soft);color:var(--ink);box-shadow:inset 0 -3px 0 var(--cat,var(--primary))}
+.tab[aria-selected="true"]{background:var(--primary-soft);color:var(--ink);color:var(--ink);box-shadow:inset 0 -3px 0 var(--cat,var(--primary))}
 
 main{padding-block:28px 56px}
 .panel{display:flex;flex-direction:column;gap:22px}
 
 /* Home */
 .hero{display:grid;gap:14px;max-width:780px}
-.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);font-weight:700}
+.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--green);font-weight:700}
 .hero h1{font-size:clamp(30px,5vw,48px);font-weight:800;letter-spacing:-.01em}
 .hero p{margin:0;font-size:18px;color:var(--muted);max-width:65ch}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:s;list-style:none;margin:0;padding:0}
 .steps li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
 .steps li::before{counter-increment:s;content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-family:var(--font-mono);font-size:14px}
+.steps li:nth-child(1)::before{background:var(--primary);color:var(--primary-ink)}
+.steps li:nth-child(2)::before{background:var(--green);color:var(--green-ink)}
+.steps li:nth-child(3)::before{background:var(--yellow);color:var(--yellow-ink)}
+.steps li{background:var(--surface-2)}
 .steps b{display:block}
 .steps span{color:var(--muted);font-size:15px}
 .section-h{font-size:22px;font-weight:800}
@@ -80,7 +77,7 @@ main{padding-block:28px 56px}
 .card h3{font-size:19px;font-weight:800}
 .card p{margin:0;color:var(--muted);font-size:15px}
 .card .go{margin-top:auto;font-weight:700;color:var(--cat);font-size:14px}
-.settings{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:14px}
+.settings{background:var(--surface-2);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:var(--radius);padding:20px;display:grid;gap:14px}
 .settings p.lead{margin:0;color:var(--muted)}
 
 /* Workspace */
@@ -89,11 +86,11 @@ main{padding-block:28px 56px}
 .ws-head h2::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--cat);margin-right:10px;vertical-align:middle}
 .ws-head p{margin:6px 0 0;color:var(--muted);max-width:65ch}
 .ws-tools{display:flex;gap:8px;flex-wrap:wrap}
-.banner{background:var(--primary-soft);border:1px dashed var(--primary);border-radius:var(--radius);padding:10px 14px;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.banner b{color:var(--primary)}
+.banner{background:var(--yellow-soft);border:1px dashed #d9a800;border-radius:var(--radius);padding:10px 14px;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.banner b{color:var(--yellow-ink)}
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:24px;align-items:start}
 .form{display:flex;flex-direction:column;gap:16px;min-width:0}
-.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 20px;display:grid;gap:14px;min-width:0}
+.block{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 20px;display:grid;gap:14px;min-width:0}
 .block-h{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:18px}
 .block-h .n{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -105,7 +102,7 @@ label.lab{font-weight:600;font-size:15px}
 .count{font-family:var(--font-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none}
 .count.near{color:var(--warn)}
 .help{margin:0;font-size:13px;color:var(--muted)}
-input[type=text],input[type=url],input[type=email],input[type=date],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:15px}
+input[type=text],input[type=url],input[type=email],input[type=date],select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:15px}
 textarea{resize:vertical;line-height:1.45}
 input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:2px solid color-mix(in srgb,var(--primary) 30%,transparent);outline-offset:0}
 
@@ -128,6 +125,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:2px 
 .btn:hover{border-color:var(--primary)}
 .btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
 .btn.primary:hover{filter:brightness(1.08)}
+.btn.green{background:var(--green);color:var(--green-ink);border-color:var(--green)}
+.btn.green:hover{filter:brightness(1.08)}
 .btn.small{padding:6px 10px;font-size:14px}
 .btn.ghost{background:transparent}
 
@@ -515,7 +514,7 @@ function panelHTML(t){
     <div class="form-end"><button type="submit" class="btn primary">Generar textos</button></div>
    </form>
    <aside class="aside" aria-label="Textos generados">
-    <div class="actions"><button class="btn primary" data-act="gen">Generar textos</button><button class="btn" data-act="mail">Enviar por email</button></div>
+    <div class="actions"><button class="btn primary" data-act="gen">Generar textos</button><button class="btn green" data-act="mail">Enviar por email</button></div>
     <div class="mailbox" data-mailbox hidden></div>
     <article class="post"><div class="post-h"><span class="net ig">${ICON_IG}</span><div><b>Instagram</b><small>Pie de foto · máx. 2.200 caracteres y 30 hashtags</small></div></div>
      <textarea id="${t.id}-out-ig" data-out="ig" aria-label="Texto para Instagram" placeholder="Pulsa «Generar textos» para crear el pie de foto."></textarea>
