@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Plantillas para generar textos de Instagram y X del GALENO Research Group.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d5a66'/%3E%3Ctext x='32' y='45' font-family='Arial' font-weight='700' font-size='38' text-anchor='middle' fill='white'%3EG%3C/text%3E%3C/svg%3E">
+<title>Publicaciones GALENO Research Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: brand band → sticky tab bar → per-tab workspace (form left, live post previews right; stacks on phones) */
+:root{
+  --bg:#eef3f2; --surface:#ffffff; --surface-2:#f6f9f8; --ink:#11272d; --muted:#566e73; --line:#d3dfdd;
+  --primary:#0d5a66; --primary-ink:#ffffff; --primary-soft:#dcecec; --accent:#d6a514; --accent-ink:#2a2003;
+  --ok:#1f7a45; --warn:#a86a00; --bad:#b3261e;
+  --c-publicacion:#0d5a66; --c-tesis:#6a47b0; --c-eventos:#2c7a4b; --c-estancias:#2563a8; --c-proyectos:#a65512; --c-inside:#a3366c;
+  --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0b1a1d; --surface:#11262a; --surface-2:#0e2023; --ink:#e2eeee; --muted:#93acb0; --line:#244146;
+  --primary:#4fb6c3; --primary-ink:#06262b; --primary-soft:#163b40; --accent:#f0c445; --accent-ink:#2a2003;
+  --ok:#5ccf8a; --warn:#f0b54a; --bad:#ff8a80;
+  --c-publicacion:#4fb6c3; --c-tesis:#a98ff0; --c-eventos:#62c98c; --c-estancias:#6ea8ee; --c-proyectos:#ec9a55; --c-inside:#ea7fb2;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0b1a1d; --surface:#11262a; --surface-2:#0e2023; --ink:#e2eeee; --muted:#93acb0; --line:#244146;
+  --primary:#4fb6c3; --primary-ink:#06262b; --primary-soft:#163b40; --accent:#f0c445; --accent-ink:#2a2003;
+  --ok:#5ccf8a; --warn:#f0b54a; --bad:#ff8a80;
+  --c-publicacion:#4fb6c3; --c-tesis:#a98ff0; --c-eventos:#62c98c; --c-estancias:#6ea8ee; --c-proyectos:#ec9a55; --c-inside:#ea7fb2;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1200px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Brand band */
+.brand{background:var(--surface);border-bottom:1px solid var(--line)}
+.brand .wrap{display:flex;align-items:center;gap:12px;padding-block:14px;flex-wrap:wrap}
+.mark{width:38px;height:38px;border-radius:9px;background:var(--primary);color:var(--primary-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:20px;flex:none}
+.brand-name{font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:.01em}
+.brand-name span{font-weight:600;color:var(--muted)}
+.brand-tag{margin-left:auto;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* Tabs */
+.tabbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin;padding-block:6px}
+.tab{flex:none;border:0;background:transparent;padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.tab .dot{width:9px;height:9px;border-radius:50%;background:var(--cat,var(--muted))}
+.tab:hover{background:var(--surface-2);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--primary-soft);color:var(--ink);box-shadow:inset 0 -3px 0 var(--cat,var(--primary))}
+
+main{padding-block:28px 56px}
+.panel{display:flex;flex-direction:column;gap:22px}
+
+/* Home */
+.hero{display:grid;gap:14px;max-width:780px}
+.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);font-weight:700}
+.hero h1{font-size:clamp(30px,5vw,48px);font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0;font-size:18px;color:var(--muted);max-width:65ch}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.steps li::before{counter-increment:s;content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-family:var(--font-mono);font-size:14px}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:15px}
+.section-h{font-size:22px;font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:var(--radius);padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--cat);transition:transform .15s ease, box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px -14px rgba(0,0,0,.35)}
+.card h3{font-size:19px;font-weight:800}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.card .go{margin-top:auto;font-weight:700;color:var(--cat);font-size:14px}
+.settings{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:14px}
+.settings p.lead{margin:0;color:var(--muted)}
+
+/* Workspace */
+.ws-head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.ws-head h2{font-size:clamp(26px,4vw,36px);font-weight:800}
+.ws-head h2::before{content:"";display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--cat);margin-right:10px;vertical-align:middle}
+.ws-head p{margin:6px 0 0;color:var(--muted);max-width:65ch}
+.ws-tools{display:flex;gap:8px;flex-wrap:wrap}
+.banner{background:var(--primary-soft);border:1px dashed var(--primary);border-radius:var(--radius);padding:10px 14px;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.banner b{color:var(--primary)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:24px;align-items:start}
+.form{display:flex;flex-direction:column;gap:16px;min-width:0}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 20px;display:grid;gap:14px;min-width:0}
+.block-h{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:18px}
+.block-h .n{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:grid;gap:5px;min-width:0}
+.field.wide{grid-column:1/-1}
+.lab-row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+label.lab{font-weight:600;font-size:15px}
+.opt{font-weight:400;color:var(--muted);font-size:13px}
+.count{font-family:var(--font-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none}
+.count.near{color:var(--warn)}
+.help{margin:0;font-size:13px;color:var(--muted)}
+input[type=text],input[type=url],input[type=email],input[type=date],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:15px}
+textarea{resize:vertical;line-height:1.45}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:2px solid color-mix(in srgb,var(--primary) 30%,transparent);outline-offset:0}
+
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.slot{position:relative;display:flex;flex-direction:column;border:1.5px dashed var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;background:var(--surface-2);min-width:0}
+.slot:hover{border-color:var(--primary)}
+.slot:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.slot-img{aspect-ratio:4/5;max-width:100%;display:grid;place-items:center;color:var(--muted);font-size:13px;background-size:cover;background-position:center}
+.slot-img svg{width:30px;height:30px;stroke:var(--muted)}
+.slot.has .slot-img svg,.slot.has .slot-img em{display:none}
+.slot-txt{padding:8px 10px;display:grid;font-size:13px;border-top:1px solid var(--line);background:var(--surface)}
+.slot-txt small{color:var(--muted)}
+.slot-x{position:absolute;top:6px;right:6px;border:0;border-radius:6px;padding:3px 8px;font-size:12px;background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.note{margin:0;font-size:13px;color:var(--muted)}
+.note b{font-family:var(--font-mono);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--font-mono);font-size:12.5px;padding:3px 8px;border-radius:999px;background:var(--primary-soft);color:var(--ink);border:1px solid var(--line)}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:15px}
+.btn:hover{border-color:var(--primary)}
+.btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.small{padding:6px 10px;font-size:14px}
+.btn.ghost{background:transparent}
+
+/* Preview column */
+.aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 66px);display:flex;flex-direction:column;gap:14px;min-width:0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions .btn{justify-content:center}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:0}
+.post-h{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.net{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none}
+.net svg{width:17px;height:17px}
+.net.ig{background:linear-gradient(135deg,#f9ce34,#ee2a7b 55%,#6228d7);color:#fff}
+.net.x{background:var(--ink);color:var(--surface)}
+.post-h b{font-size:15px}
+.post-h small{display:block;color:var(--muted);font-size:12.5px}
+.post textarea{border:0;border-radius:0;background:var(--surface);min-height:220px;font-size:14.5px;padding:12px}
+.post textarea.x-out{min-height:150px}
+.post-f{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--line);flex-wrap:wrap;background:var(--surface-2)}
+.meter{font-family:var(--font-mono);font-size:12.5px;font-variant-numeric:tabular-nums;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.meter.ok{color:var(--ok)} .meter.warn{color:var(--warn)} .meter.bad{color:var(--bad)}
+.post-f .btn{margin-left:auto}
+.mailbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;font-size:14.5px;display:grid;gap:8px}
+.mailbox ol{margin:0;padding-left:20px;display:grid;gap:2px}
+.addr{font-family:var(--font-mono);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;user-select:all;word-break:break-all}
+.form-end{display:flex;gap:8px;flex-wrap:wrap}
+
+footer{border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px}
+footer .wrap{padding-block:18px;display:flex;gap:8px 20px;flex-wrap:wrap;justify-content:space-between}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:20;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:960px){
+  .workspace{grid-template-columns:minmax(0,1fr)}
+  .aside{position:static}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:620px){
+  .steps,.cards,.grid2{grid-template-columns:minmax(0,1fr)}
+  .brand-tag{display:none}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+<header class="brand gutter">
+  <div class="wrap">
+    <div class="mark" aria-hidden="true">G</div>
+    <div class="brand-name">GALENO <span>Research Group</span></div>
+    <div class="brand-tag">Plantillas para redes sociales</div>
+  </div>
+</header>
+<nav class="tabbar gutter" aria-label="Plantillas">
+  <div class="wrap tabs" role="tablist" id="tabs"></div>
+</nav>
+<main class="gutter"><div class="wrap" id="panels"></div></main>
+<footer class="gutter">
+  <div class="wrap">
+    <span>Publicaciones GALENO Research Group</span>
+    <span>Todo funciona en tu navegador: los datos y las fotos no se suben a ningún sitio.</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const has = s=>s!=null && String(s).trim()!=='';
+const tr = s=>has(s)?String(s).trim():'';
+const p = (pre,val,post='')=>has(val)?pre+tr(val)+post:'';
+const list = s=>String(s||'').split(/[,;\n]/).map(t=>t.trim()).filter(Boolean);
+const joinEs = a=>a.length<=1?(a[0]||''):a.slice(0,-1).join(', ')+(/^[Ii]/.test(a[a.length-1].replace(/^@/,''))&&!/^[Hh]i[aeo]/.test(a[a.length-1])?' e ':' y ')+a[a.length-1];
+const people = (men,names)=>{const m=list(men);return m.length?joinEs(m):joinEs(list(names));};
+const countPeople = (men,names)=>Math.max(list(men).length,list(names).length);
+const q = s=>has(s)?'«'+tr(s)+'»':'';
+const fecha = iso=>{if(!has(iso))return'';const d=new Date(iso+'T12:00:00');return isNaN(d)?iso:d.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});};
+const lines = arr=>arr.filter(has).join('\n');
+const blocks = (...bs)=>bs.map(b=>Array.isArray(b)?lines(b):b).filter(has).join('\n\n');
+const tidy = s=>s.replace(/[ \t]{2,}/g,' ').replace(/ ([.,;:)])/g,'$1').replace(/\( /g,'(').replace(/\n{3,}/g,'\n\n').trim();
+const cap = s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+
+const ICON_PHOTO='<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>';
+const ICON_IG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>';
+const ICON_X='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>';
+
+/* ---------- settings ---------- */
+const DEFAULT_SETTINGS={name:'GALENO Research Group',ig:'',x:'',tags:'GALENOResearchGroup Investigacion Ciencia',email:''};
+let store={settings:{...DEFAULT_SETTINGS},drafts:{}};
+try{const raw=localStorage.getItem('galeno-rrss-v1');if(raw){const d=JSON.parse(raw);store.settings={...DEFAULT_SETTINGS,...(d.settings||{})};store.drafts=d.drafts||{};}}catch(e){}
+let saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('galeno-rrss-v1',JSON.stringify(store));}catch(e){}},300);}
+
+function ctx(t,v){
+  const S=store.settings;
+  const name=tr(S.name)||'GALENO Research Group';
+  const norm=s=>s.replace(/^#/,'').replace(/[^\p{L}\p{N}_]/gu,'');
+  const fixed=String(S.tags||'').split(/\s+/).map(norm).filter(Boolean);
+  const extra=(t.extraTags||[]);
+  const custom=String(v.tags||'').split(/[\s,]+/).map(norm).filter(Boolean).slice(0,2);
+  const uniq=a=>a.filter((x,i)=>a.findIndex(y=>y.toLowerCase()===x.toLowerCase())===i);
+  return {
+    name,
+    gIG: tr(S.ig)?(S.ig.startsWith('@')?tr(S.ig):'@'+tr(S.ig)):name,
+    gX: tr(S.x)?(S.x.startsWith('@')?tr(S.x):'@'+tr(S.x)):name,
+    tagsIG: uniq([...fixed,...extra,...custom]).map(x=>'#'+x).join(' '),
+    tagsX: uniq([...custom,...extra,...fixed.slice(0,1)]).slice(0,3).map(x=>'#'+x).join(' ')
+  };
+}
+
+/* ---------- shared fields ---------- */
+const MEN_IG={id:'menIG',label:'Menciones en Instagram',help:'Escribe los @ reales separados por comas. Si alguien no tiene cuenta, pon solo su nombre sin @.'};
+const MEN_X={id:'menX',label:'Menciones en X',help:'Igual que arriba, con las cuentas de X.'};
+
+/* ---------- templates ---------- */
+const T=[
+{
+ id:'publicacion',name:'Artículo científico',tab:'Publicaciones',
+ desc:'Papers y publicaciones en revistas. Título, hallazgos, aplicación práctica y referencia.',
+ intro:'Rellena los datos del artículo y sus hallazgos principales. Los textos para Instagram y X se generan a partir de estos campos.',
+ sections:[
+  {title:'Datos del artículo',fields:[
+   {id:'titulo',label:'Título del artículo',wide:true},
+   {id:'revista',label:'Revista'},
+   {id:'doi',label:'DOI o enlace',type:'url',ph:'https://doi.org/…'},
+   {id:'autores',label:'Autores (nombres completos, separados por comas)',wide:true},
+   MEN_IG,MEN_X]},
+  {title:'Contenido clave',fields:[
+   {id:'gancho',label:'Título llamativo (pregunta o afirmación impactante)',max:100,wide:true},
+   {id:'objetivo',label:'Objetivo principal',type:'textarea',max:200,wide:true},
+   {id:'h1',label:'Hallazgo 1',max:120,wide:true},
+   {id:'h2',label:'Hallazgo 2',max:120,wide:true},
+   {id:'h3',label:'Hallazgo 3',max:120,wide:true},
+   {id:'h4',label:'Hallazgo 4',max:120,wide:true,opt:true},
+   {id:'aplicacion',label:'Aplicación práctica',type:'textarea',max:200,wide:true}]},
+  {title:'Referencia bibliográfica',fields:[
+   {id:'ref',label:'Referencia completa (formato APA)',type:'textarea',wide:true}]}
+ ],
+ photos:[{label:'Portada',hint:'Título + abstract'},{label:'Gráfico',hint:'Tabla o figura clave'},{label:'Aplicación',hint:'Infografía o resumen'}],
+ subject:v=>v.titulo,
+ ig:(v,c)=>blocks(
+   ['📄 NUEVA PUBLICACIÓN · '+c.gIG],[v.gancho],
+   [p('🎯 Objetivo\n',v.objetivo)],
+   [v.h1,v.h2,v.h3,v.h4].some(has)?['🔍 Principales hallazgos',...[v.h1,v.h2,v.h3,v.h4].filter(has).map(h=>'🔹 '+tr(h))]:'',
+   [p('💡 Aplicación práctica\n',v.aplicacion)],
+   [p('📚 Revista: ',v.revista),p('✍️ Autores: ',people(v.menIG,v.autores)),p('🔗 ',v.doi)],
+   [p('📖 ',v.ref)],[c.tagsIG]),
+ x:(v,c)=>blocks(
+   ['📄 Nueva publicación de '+c.gX],[v.gancho],[p('🔹 ',v.h1)],
+   [p('📚 ',v.revista),p('🔗 ',v.doi)],[p('👥 ',people(v.menX,''))],[c.tagsX]),
+ example:{titulo:'Efectos de 12 semanas de entrenamiento de fuerza sobre la calidad de vida en adultos mayores',revista:'Nombre de la Revista',doi:'https://doi.org/10.0000/ejemplo',autores:'Nombre Apellido, Nombre Apellido, Nombre Apellido',menIG:'@autora_ejemplo, @autor_ejemplo, Nombre Apellido',menX:'@autora_ejemplo, @autor_ejemplo',gancho:'¿Puede el entrenamiento de fuerza mejorar la calidad de vida después de los 65?',objetivo:'Analizar el efecto de 12 semanas de entrenamiento de fuerza supervisado sobre la calidad de vida y la capacidad funcional en adultos mayores.',h1:'La calidad de vida mejoró de forma significativa en el grupo de entrenamiento.',h2:'Aumentaron la velocidad de marcha y la fuerza de prensión.',h3:'La adherencia al programa superó el 85 %.',h4:'',aplicacion:'Dos sesiones semanales de fuerza supervisada son una estrategia viable y segura para centros de mayores y atención primaria.',ref:'Apellido, N., Apellido, N. y Apellido, N. (2026). Título del artículo. Nombre de la Revista, 00(0), 1-10. https://doi.org/10.0000/ejemplo',tags:'EnvejecimientoActivo EntrenamientoDeFuerza'}
+},
+{
+ id:'tesis',name:'Tesis doctoral',tab:'Tesis',
+ desc:'Celebra a los nuevos doctores y doctoras: tesis, calificación, hallazgo principal y una frase personal.',
+ intro:'Rellena los datos de la defensa. La frase personal le da cercanía a la publicación.',
+ sections:[
+  {title:'Datos de la tesis',fields:[
+   {id:'genero',label:'Texto de la cabecera',type:'select',options:['Nueva doctora','Nuevo doctor','Nueva tesis defendida (sin género)']},
+   {id:'nombre',label:'Nombre del doctor/a'},
+   MEN_IG,MEN_X,
+   {id:'titulo',label:'Título de la tesis',wide:true},
+   {id:'fecha',label:'Fecha de defensa',type:'date'},
+   {id:'programa',label:'Programa de doctorado o universidad'},
+   {id:'calif',label:'Calificación',type:'select',options:['Sobresaliente cum laude','Sobresaliente','Notable','Aprobado','No indicar']},
+   {id:'mencion',label:'Mención',type:'select',options:['Ninguna','Mención Internacional','Mención Industrial']},
+   {id:'directores',label:'Directores/as (nombres o @, separados por comas)',wide:true},
+   {id:'enlace',label:'Enlace al repositorio',type:'url',opt:true,wide:true}]},
+  {title:'Contenido clave',fields:[
+   {id:'hallazgo',label:'Hallazgo principal',type:'textarea',max:200,wide:true},
+   {id:'frase',label:'Frase personal del doctor/a',type:'textarea',max:150,wide:true}]}
+ ],
+ photos:[{label:'Defensa',hint:'Momento de la exposición'},{label:'Tribunal',hint:'Con tribunal y dirección'}],
+ subject:v=>v.nombre,
+ head:(v,g)=>v.genero==='Nuevo doctor'?'🎓 ¡Nuevo doctor en '+g+'!':v.genero==='Nueva doctora'?'🎓 ¡Nueva doctora en '+g+'!':'🎓 ¡Nueva tesis doctoral defendida en '+g+'!',
+ ig(v,c){const calif=v.calif&&v.calif!=='No indicar'?v.calif:'';const men=v.mencion&&v.mencion!=='Ninguna'?v.mencion:'';
+  return blocks([this.head(v,c.gIG)],
+   ['Enhorabuena a '+(people(v.menIG,v.nombre)||'nuestro/a compañero/a')+', que ha defendido su tesis doctoral '+q(v.titulo)+p(' el ',fecha(v.fecha))+'.'],
+   [p('🏅 Calificación: ',[calif,men].filter(has).join(' · ')),p('🧭 Dirección: ',joinEs(list(v.directores))),p('🏛️ ',v.programa)],
+   [p('🔍 Hallazgo principal\n',v.hallazgo)],
+   [has(v.frase)?'💬 «'+tr(v.frase)+'»'+p(' — ',v.nombre):''],
+   ['¡Mucha suerte en esta nueva etapa! 👏'],[p('🔗 ',v.enlace)],[c.tagsIG]);},
+ x(v,c){const calif=v.calif&&v.calif!=='No indicar'?v.calif:'';
+  return blocks([this.head(v,c.gX)],
+   ['Enhorabuena a '+(people(v.menX,v.nombre)||'nuestro/a compañero/a')+' por defender su tesis '+q(v.titulo)+p(', calificada con ',calif)+'. 👏'],
+   [p('🔗 ',v.enlace)],[c.tagsX]);},
+ example:{genero:'Nueva doctora',nombre:'Nombre Apellido',menIG:'@doctora_ejemplo',menX:'@doctora_ejemplo',titulo:'Actividad física, condición física y salud mental en población universitaria',fecha:'2026-10-15',programa:'Programa de Doctorado en Ciencias de la Salud',calif:'Sobresaliente cum laude',mencion:'Mención Internacional',directores:'Dra. Nombre Apellido, Dr. Nombre Apellido',enlace:'',hallazgo:'Los estudiantes con mejor condición cardiorrespiratoria presentaron menos síntomas de ansiedad y depresión.',frase:'Esta tesis es de todo el equipo que me ha acompañado durante estos años.',tags:'TesisDoctoral SaludMental'}
+},
+{
+ id:'eventos',name:'Eventos y congresos',tab:'Eventos y congresos',
+ desc:'Ponencias, pósteres, jornadas organizadas, conferencias invitadas y premios recibidos.',
+ intro:'Elige el tipo de participación: el texto cambia según sea una ponencia, un póster, una jornada propia, una conferencia o un premio.',
+ sections:[
+  {title:'Datos del evento',fields:[
+   {id:'tipo',label:'Tipo',type:'select',options:['Ponencia oral','Póster','Jornada organizada por el grupo','Conferencia invitada','Premio recibido'],wide:true},
+   {id:'evento',label:'Nombre del evento o congreso',wide:true},
+   {id:'lugar',label:'Ciudad o sede'},
+   {id:'fecha',label:'Fecha',type:'date'},
+   {id:'titulo',label:'Título de la comunicación, póster o conferencia',wide:true},
+   {id:'participantes',label:'Personas del grupo (nombres completos)',wide:true},
+   MEN_IG,MEN_X,
+   {id:'premio',label:'Nombre del premio',opt:true,max:120,wide:true}]},
+  {title:'Contenido clave',fields:[
+   {id:'mensaje',label:'Mensaje clave o idea principal',type:'textarea',max:200,wide:true},
+   {id:'enlace',label:'Enlace del evento',type:'url',opt:true,wide:true}]}
+ ],
+ photos:[{label:'Presentación',hint:'Ponencia o póster'},{label:'Equipo',hint:'El grupo en el evento'},{label:'Detalle',hint:'Cartel, premio o diploma'}],
+ subject:v=>v.evento,
+ parts(v,g,men){
+  const n=countPeople(men,v.participantes);const who=people(men,v.participantes)||g;const ha=n>1?'han':'ha';
+  const where=[tr(v.lugar),fecha(v.fecha)].filter(has).join(', ');
+  const at=(has(v.evento)?' en '+tr(v.evento):'')+(where?' ('+where+')':'');
+  switch(v.tipo){
+   case 'Póster':return['🖼️ Póster'+p(' en ',v.evento),who+' '+ha+' presentado el póster '+q(v.titulo)+at+'.'];
+   case 'Jornada organizada por el grupo':return['📅 '+(tr(v.evento)||'Nueva jornada')+' · organiza '+g,'Celebramos '+(tr(v.evento)||'una nueva jornada')+(where?' ('+where+')':'')+'.'+p(' Programa: ',v.titulo,'.')];
+   case 'Conferencia invitada':return['🎙️ Conferencia invitada'+p(' en ',v.evento),who+' '+ha+' impartido la conferencia '+q(v.titulo)+at+'.'];
+   case 'Premio recibido':return['🏆 '+(tr(v.premio)||'Premio')+p(' · ',v.evento),'¡Enhorabuena a '+who+'! '+(has(v.titulo)?'El trabajo '+q(v.titulo)+' ha':'Su trabajo ha')+' recibido '+(tr(v.premio)||'un premio')+at+'.'];
+   default:return['🎤 Ponencia'+p(' en ',v.evento),who+' '+ha+' presentado la comunicación '+q(v.titulo)+at+'.'];
+  }},
+ ig(v,c){const [h,t]=this.parts(v,c.gIG,v.menIG);return blocks([h],[t],[p('💡 ',v.mensaje)],[p('🔗 ',v.enlace)],[c.tagsIG]);},
+ x(v,c){const [h,t]=this.parts(v,c.gX,v.menX);return blocks([h],[t],[p('🔗 ',v.enlace)],[c.tagsX]);},
+ example:{tipo:'Ponencia oral',evento:'Congreso Internacional de Actividad Física y Salud',lugar:'Sevilla',fecha:'2026-11-20',titulo:'Condición física y rendimiento académico en adolescentes',participantes:'Nombre Apellido',menIG:'@investigadora_ejemplo',menX:'@investigadora_ejemplo',premio:'',mensaje:'Mejorar la condición física en los centros educativos puede tener beneficios más allá de la salud física.',enlace:'',tags:'Congreso ActividadFisica'}
+},
+{
+ id:'estancias',name:'Estancias en el extranjero',tab:'Estancias',
+ desc:'Estancias de investigación internacionales: institución de destino, objetivo y lo que aportan al grupo.',
+ intro:'Indica si la estancia está en curso, ha terminado o está a punto de empezar; el texto se adapta a cada caso.',
+ sections:[
+  {title:'Datos de la estancia',fields:[
+   {id:'estado',label:'Situación',type:'select',options:['En curso','Finalizada','Comienza próximamente']},
+   {id:'nombre',label:'Investigador/a'},
+   MEN_IG,MEN_X,
+   {id:'institucion',label:'Institución de destino',wide:true},
+   {id:'ciudad',label:'Ciudad y país'},
+   {id:'supervisor',label:'Investigador/a anfitrión/a'},
+   {id:'inicio',label:'Fecha de inicio',type:'date'},
+   {id:'fin',label:'Fecha de fin',type:'date'},
+   {id:'financ',label:'Financiación o convocatoria',opt:true,wide:true}]},
+  {title:'Contenido clave',fields:[
+   {id:'objetivo',label:'Objetivo de la estancia',type:'textarea',max:200,wide:true},
+   {id:'aporta',label:'Qué aporta al grupo',type:'textarea',max:200,wide:true},
+   {id:'frase',label:'Frase personal',type:'textarea',max:150,wide:true,opt:true}]}
+ ],
+ photos:[{label:'Destino',hint:'En la institución de acogida'},{label:'Equipo anfitrión',hint:'Con el grupo de acogida'}],
+ subject:v=>v.nombre,
+ text(v,g,men){
+  const verb={'Finalizada':'ha realizado','Comienza próximamente':'comenzará'}[v.estado]||'está realizando';
+  const fechas=has(v.inicio)&&has(v.fin)?' del '+fecha(v.inicio)+' al '+fecha(v.fin):p(' desde el ',fecha(v.inicio));
+  return (people(men,v.nombre)||'Un miembro del grupo')+' '+verb+' una estancia de investigación'+p(' en ',v.institucion)+p(' (',v.ciudad,')')+fechas+p(', bajo la supervisión de ',v.supervisor)+'.';},
+ ig(v,c){return blocks(['🌍 Estancia internacional · '+c.gIG],[this.text(v,c.gIG,v.menIG)],[p('🎯 Objetivo\n',v.objetivo)],[p('🤝 Qué aporta al grupo\n',v.aporta)],[p('💬 «',v.frase,'»')],[p('💶 Financiación: ',v.financ)],[c.tagsIG]);},
+ x(v,c){return blocks(['🌍 '+this.text(v,c.gX,v.menX)],[p('🎯 ',v.objetivo)],[c.tagsX]);},
+ example:{estado:'En curso',nombre:'Nombre Apellido',menIG:'@investigador_ejemplo',menX:'@investigador_ejemplo',institucion:'Universidad de destino',ciudad:'Ciudad, País',supervisor:'Prof. Nombre Apellido',inicio:'2026-09-01',fin:'2026-12-15',financ:'Programa de movilidad internacional',objetivo:'Aprender nuevas técnicas de evaluación de la actividad física mediante acelerometría.',aporta:'Nuevas colaboraciones internacionales y metodología que aplicaremos en los próximos estudios del grupo.',frase:'',tags:'Internacionalizacion EstanciaDeInvestigacion'}
+},
+{
+ id:'proyectos',name:'Proyectos y transferencia',tab:'Proyectos y transferencia',
+ desc:'Proyectos concedidos y finalizados, colaboraciones con empresas, clubes o entidades y spin-offs.',
+ intro:'Elige el tipo de anuncio. Si la convocatoria exige un texto de agradecimiento, pégalo en su campo y se añadirá al final.',
+ sections:[
+  {title:'Datos del proyecto',fields:[
+   {id:'tipo',label:'Tipo',type:'select',options:['Proyecto concedido','Colaboración con empresa, club o entidad','Transferencia o spin-off','Proyecto finalizado'],wide:true},
+   {id:'titulo',label:'Título del proyecto o iniciativa',wide:true},
+   {id:'acronimo',label:'Acrónimo',opt:true},
+   {id:'duracion',label:'Duración',ph:'2026–2029'},
+   {id:'entidad',label:'Entidad financiadora'},
+   {id:'ref',label:'Referencia o código',opt:true},
+   {id:'ip',label:'Investigador/a principal'},
+   {id:'colab',label:'Entidades colaboradoras',opt:true},
+   MEN_IG,MEN_X,
+   {id:'enlace',label:'Enlace',type:'url',opt:true,wide:true}]},
+  {title:'Contenido clave',fields:[
+   {id:'objetivo',label:'Objetivo principal',type:'textarea',max:200,wide:true},
+   {id:'impacto',label:'Impacto esperado o resultados',type:'textarea',max:200,wide:true},
+   {id:'agrad',label:'Texto de agradecimiento a la financiación',type:'textarea',opt:true,wide:true}]}
+ ],
+ photos:[{label:'Equipo',hint:'Personas del proyecto'},{label:'Identidad',hint:'Logo o cartel'},{label:'Actividad',hint:'Trabajo de campo, reunión…'}],
+ subject:v=>v.acronimo||v.titulo,
+ parts(v,g){
+  const name=q(v.titulo)+p(' (',v.acronimo,')');
+  switch(v.tipo){
+   case 'Colaboración con empresa, club o entidad':return['🤝 Nueva colaboración',g+' inicia una colaboración'+p(' con ',v.colab)+(has(v.titulo)?' en el marco de '+name:'')+'.'];
+   case 'Transferencia o spin-off':return['💼 Transferencia de conocimiento','Presentamos '+(name||'una nueva iniciativa')+', una iniciativa de transferencia de '+g+p(' junto a ',v.colab)+'.'];
+   case 'Proyecto finalizado':return['✅ Proyecto finalizado','Cerramos el proyecto '+name+p(', financiado por ',v.entidad)+'. ¡Gracias a todas las personas y entidades que lo han hecho posible!'];
+   default:return['🚀 Nuevo proyecto concedido',g+' ha obtenido financiación para el proyecto '+name+p(', financiado por ',v.entidad)+p(' (ref. ',v.ref,')')+'.'];
+  }},
+ ig(v,c){const [h,t]=this.parts(v,c.gIG);const fin=v.tipo==='Proyecto finalizado';const col=v.tipo==='Colaboración con empresa, club o entidad';
+  return blocks([h],[t],[p('🎯 Objetivo\n',v.objetivo)],[p(fin?'🌱 Resultados e impacto\n':'🌱 Impacto esperado\n',v.impacto)],
+   [p('👤 IP: ',people(v.menIG,v.ip)),col?'':p('🤝 Colaboran: ',v.colab),p('⏳ Duración: ',v.duracion)],[p('🔗 ',v.enlace)],[v.agrad],[c.tagsIG]);},
+ x(v,c){const [h,t]=this.parts(v,c.gX);return blocks([h],[t],[p('👤 IP: ',people(v.menX,''))],[p('🔗 ',v.enlace)],[c.tagsX]);},
+ example:{tipo:'Proyecto concedido',titulo:'Promoción de la actividad física en centros educativos',acronimo:'MOVE-ED',duracion:'2026–2029',entidad:'Agencia financiadora',ref:'XXX0000-00',ip:'Dra. Nombre Apellido',colab:'Ayuntamiento y clubes deportivos locales',menIG:'@ip_ejemplo',menX:'@ip_ejemplo',enlace:'',objetivo:'Diseñar y evaluar una intervención escolar para aumentar la actividad física diaria del alumnado.',impacto:'Una guía práctica para centros educativos y datos para orientar políticas de salud escolar.',agrad:'',tags:'ProyectoDeInvestigacion Transferencia'}
+},
+{
+ id:'inside',name:'Inside GALENO',tab:'Inside GALENO',extraTags:['InsideGALENO'],
+ desc:'Conoce al equipo, el laboratorio, las reuniones internas y los servicios que el grupo ofrece a la sociedad.',
+ intro:'Selecciona el tipo de contenido. Las preguntas cambian para ayudarte a escribir cada caso.',
+ sections:[
+  {title:'Tipo de contenido',fields:[
+   {id:'tipo',label:'Tipo',type:'select',options:['Conoce al investigador/a','Laboratorio y equipamiento','Workshop o reunión interna','Servicios a la sociedad'],wide:true}]},
+  {title:'Datos',fields:[
+   {id:'nombre',label:'Nombre de la persona, laboratorio, actividad o servicio',wide:true},
+   MEN_IG,MEN_X,
+   {id:'q1',label:'¿En qué trabaja?',type:'textarea',max:200,wide:true,byTipo:['¿En qué trabaja?','¿Para qué sirve?','¿Qué se trató?','¿Qué ofrecemos?']},
+   {id:'q2',label:'¿Por qué importa?',type:'textarea',max:200,wide:true,byTipo:['¿Por qué importa su trabajo?','Beneficio principal','¿Por qué importa?','Beneficio para la sociedad']},
+   {id:'q3',label:'Una curiosidad',type:'textarea',max:150,wide:true,byTipo:['Una curiosidad','Ejemplo práctico','Lo más destacado','Contacto']}]}
+ ],
+ photos:[{label:'Foto principal',hint:'Persona, laboratorio o servicio'}],
+ subject:v=>v.nombre,
+ meta(v){const i=['Conoce al investigador/a','Laboratorio y equipamiento','Workshop o reunión interna','Servicios a la sociedad'].indexOf(v.tipo);
+  return [
+   {head:(n)=>'🔬 Conoce a '+(n||'nuestro equipo'),l:['🔬 En qué trabaja','🌍 Por qué importa','✨ Una curiosidad']},
+   {head:(n)=>'🧪 Nuestro laboratorio'+(n?': '+n:''),l:['⚙️ Para qué sirve','🌍 Beneficio principal','💡 Ejemplo práctico']},
+   {head:(n)=>'🗣️ Inside GALENO'+(n?': '+n:''),l:['📝 Qué se trató','🌍 Por qué importa','💬 Lo más destacado']},
+   {head:(n)=>'🤝 Servicios a la sociedad'+(n?': '+n:''),l:['🧩 Qué ofrecemos','🌍 Beneficio para la sociedad','📩 Contacto']}][Math.max(0,i)];},
+ who(v,men){return v.tipo==='Conoce al investigador/a'?(people(men,v.nombre)):tr(v.nombre);},
+ ig(v,c){const m=this.meta(v);return blocks([m.head(this.who(v,v.menIG))],[p(m.l[0]+'\n',v.q1)],[p(m.l[1]+'\n',v.q2)],[p(m.l[2]+'\n',v.q3)],[v.tipo!=='Conoce al investigador/a'?p('👥 ',people(v.menIG,'')):''],[c.tagsIG]);},
+ x(v,c){const m=this.meta(v);return blocks([m.head(this.who(v,v.menX))],[v.q1],[v.tipo==='Servicios a la sociedad'?p('📩 ',v.q3):''],[c.tagsX]);},
+ example:{tipo:'Conoce al investigador/a',nombre:'Nombre Apellido',menIG:'@investigadora_ejemplo',menX:'@investigadora_ejemplo',q1:'Estudia cómo la actividad física durante el embarazo influye en la salud de la madre y del bebé.',q2:'Sus resultados ayudan a diseñar recomendaciones seguras y basadas en evidencia para las embarazadas.',q3:'Antes de dedicarse a la investigación fue entrenadora de atletismo durante diez años.',tags:'ConoceAlEquipo MujeresEnCiencia'}
+}
+];
+T.forEach(t=>t.fields=t.sections.flatMap(s=>s.fields));
+const COLOR=id=>`var(--c-${id})`;
+
+/* ---------- render ---------- */
+const tabsEl=$('#tabs'), panelsEl=$('#panels');
+const TABS=[{id:'inicio',tab:'Inicio'},...T];
+tabsEl.innerHTML=TABS.map(t=>`<button class="tab" role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="false" data-tab="${t.id}" style="--cat:${t.id==='inicio'?'var(--primary)':COLOR(t.id)}">${t.id==='inicio'?'':'<span class="dot"></span>'}${esc(t.tab)}</button>`).join('');
+
+function homeHTML(){
+ const S=store.settings;
+ return `<section class="panel" id="panel-inicio" role="tabpanel" aria-labelledby="tab-inicio">
+  <div class="hero">
+   <div class="eyebrow">Plantillas para redes sociales</div>
+   <h1>Publicaciones GALENO Research Group</h1>
+   <p>Elige la plantilla según lo que quieras comunicar, rellena los campos y obtén los textos listos para publicar en Instagram y en X. No hace falta instalar nada: todo funciona desde el navegador.</p>
+  </div>
+  <ol class="steps">
+   <li><div><b>Rellena la plantilla</b><span>Datos, ideas clave, menciones y fotos.</span></div></li>
+   <li><div><b>Genera los textos</b><span>Uno para Instagram y otro adaptado a los 280 caracteres de X.</span></div></li>
+   <li><div><b>Copia o envía</b><span>Cópialos o mándalos por email junto con las fotos.</span></div></li>
+  </ol>
+  <h2 class="section-h">Plantillas</h2>
+  <div class="cards">${T.map(t=>`<button class="card" data-go="${t.id}" style="--cat:${COLOR(t.id)}"><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><span class="go">Abrir plantilla →</span></button>`).join('')}</div>
+  <section class="settings" aria-labelledby="ajustes-h">
+   <h2 class="section-h" id="ajustes-h">Ajustes del grupo</h2>
+   <p class="lead">Se aplican a todas las plantillas y se guardan en este navegador.</p>
+   <div class="grid2">
+    <div class="field"><label class="lab" for="set-name">Nombre del grupo</label><input type="text" id="set-name" data-set="name" value="${esc(S.name)}"></div>
+    <div class="field"><label class="lab" for="set-email">Correo de la persona que gestiona las redes</label><input type="email" id="set-email" data-set="email" value="${esc(S.email)}" placeholder="correo@ejemplo.es"><p class="help">Destino del botón «Enviar por email».</p></div>
+    <div class="field"><label class="lab" for="set-ig">Cuenta del grupo en Instagram</label><input type="text" id="set-ig" data-set="ig" value="${esc(S.ig)}" placeholder="@cuenta_del_grupo"><p class="help">Si se deja vacío, se usa el nombre del grupo.</p></div>
+    <div class="field"><label class="lab" for="set-x">Cuenta del grupo en X</label><input type="text" id="set-x" data-set="x" value="${esc(S.x)}" placeholder="@cuenta_del_grupo"></div>
+    <div class="field wide"><label class="lab" for="set-tags">Hashtags fijos (sin #, separados por espacios)</label><input type="text" id="set-tags" data-set="tags" value="${esc(S.tags)}"><p class="help">Se añaden siempre en Instagram. En X solo se usa el primero, junto a los propios de cada publicación.</p></div>
+   </div>
+  </section>
+ </section>`;
+}
+
+function fieldHTML(t,f){
+ const id=`${t.id}-${f.id}`, type=f.type||'text';
+ let ctrl;
+ if(type==='textarea')ctrl=`<textarea id="${id}" data-f="${f.id}" rows="${f.max&&f.max<=150?2:3}"${f.max?` maxlength="${f.max}"`:''} placeholder="${esc(f.ph||'')}"></textarea>`;
+ else if(type==='select')ctrl=`<select id="${id}" data-f="${f.id}">${f.options.map(o=>`<option>${esc(o)}</option>`).join('')}</select>`;
+ else ctrl=`<input type="${type==='url'?'url':type==='date'?'date':'text'}" id="${id}" data-f="${f.id}"${f.max?` maxlength="${f.max}"`:''} placeholder="${esc(f.ph||'')}">`;
+ return `<div class="field${f.wide?' wide':''}"><div class="lab-row"><label class="lab" for="${id}"><span class="lt">${esc(f.label)}</span>${f.opt?' <span class="opt">(opcional)</span>':''}</label>${f.max?`<span class="count" data-count="${f.id}">0 / ${f.max}</span>`:''}</div>${ctrl}${f.help?`<p class="help">${esc(f.help)}</p>`:''}</div>`;
+}
+
+function panelHTML(t){
+ let n=0;
+ const secs=t.sections.map(s=>`<section class="block"><div class="block-h"><span class="n">${++n}</span>${esc(s.title)}</div><div class="grid2">${s.fields.map(f=>fieldHTML(t,f)).join('')}</div></section>`).join('');
+ const photos=`<section class="block"><div class="block-h"><span class="n">${++n}</span>Fotos</div>
+   <div class="photos">${t.photos.map((ph,i)=>`<label class="slot" for="${t.id}-ph${i}"><input type="file" accept="image/*" class="sr" id="${t.id}-ph${i}" data-ph="${i}"><span class="slot-img">${ICON_PHOTO}</span><span class="slot-txt"><b>Foto ${i+1}: ${esc(ph.label)}</b><small>${esc(ph.hint)}</small></span></label>`).join('')}</div>
+   <p class="note"><b data-phcount>0</b> de ${t.photos.length} ${t.photos.length>1?'fotos seleccionadas':'foto seleccionada'}. Las fotos solo se previsualizan aquí: adjúntalas tú al correo o súbelas al publicar.</p></section>`;
+ const tags=`<section class="block"><div class="block-h"><span class="n">${++n}</span>Hashtags</div>
+   <div class="field"><label class="lab" for="${t.id}-tags">Hashtags propios de esta publicación (máximo 2, sin #, separados por espacios)</label><input type="text" id="${t.id}-tags" data-f="tags"></div>
+   <div class="note">Se añaden automáticamente:</div><div class="chips" data-fixed></div></section>`;
+ return `<section class="panel" id="panel-${t.id}" role="tabpanel" aria-labelledby="tab-${t.id}" hidden style="--cat:${COLOR(t.id)}" data-t="${t.id}">
+  <div class="ws-head"><div><h2>${esc(t.name)}</h2><p>${esc(t.intro)}</p></div>
+   <div class="ws-tools"><button class="btn small ghost" data-act="example">Cargar ejemplo</button><button class="btn small ghost" data-act="clear">Vaciar formulario</button></div></div>
+  <div class="banner" data-banner hidden><b>Datos de ejemplo.</b> Sustitúyelos por los tuyos o pulsa «Vaciar formulario».</div>
+  <div class="workspace">
+   <form class="form" novalidate>${secs}${photos}${tags}
+    <div class="form-end"><button type="submit" class="btn primary">Generar textos</button></div>
+   </form>
+   <aside class="aside" aria-label="Textos generados">
+    <div class="actions"><button class="btn primary" data-act="gen">Generar textos</button><button class="btn" data-act="mail">Enviar por email</button></div>
+    <div class="mailbox" data-mailbox hidden></div>
+    <article class="post"><div class="post-h"><span class="net ig">${ICON_IG}</span><div><b>Instagram</b><small>Pie de foto · máx. 2.200 caracteres y 30 hashtags</small></div></div>
+     <textarea id="${t.id}-out-ig" data-out="ig" aria-label="Texto para Instagram" placeholder="Pulsa «Generar textos» para crear el pie de foto."></textarea>
+     <div class="post-f"><span class="meter ok" data-meter="ig">0 / 2200</span><span class="meter ok" data-meter="igtags"># 0 / 30</span><button class="btn small" data-copy="ig">Copiar</button></div></article>
+    <article class="post"><div class="post-h"><span class="net x">${ICON_X}</span><div><b>X</b><small>Máx. 280 · enlaces cuentan 23 y emojis 2</small></div></div>
+     <textarea class="x-out" id="${t.id}-out-x" data-out="x" aria-label="Texto para X" placeholder="Pulsa «Generar textos» para crear el post."></textarea>
+     <div class="post-f"><span class="meter ok" data-meter="x">0 / 280</span><button class="btn small" data-copy="x">Copiar</button></div></article>
+   </aside>
+  </div>
+ </section>`;
+}
+panelsEl.innerHTML=homeHTML()+T.map(panelHTML).join('');
+
+/* ---------- counters ---------- */
+const seg=(typeof Intl!=='undefined'&&Intl.Segmenter)?new Intl.Segmenter('es',{granularity:'grapheme'}):null;
+const graphemes=s=>seg?Array.from(seg.segment(s),x=>x.segment):Array.from(s);
+function xCount(s){
+ s=s.normalize('NFC').replace(/https?:\/\/\S+/g,'x'.repeat(23));
+ let n=0;
+ for(const g of graphemes(s)){
+  if(/\p{Extended_Pictographic}/u.test(g)){n+=2;continue;}
+  for(const ch of g){const cp=ch.codePointAt(0);n+=(cp<=4351||(cp>=8192&&cp<=8205)||(cp>=8208&&cp<=8223)||(cp>=8242&&cp<=8247))?1:2;}
+ }
+ return n;
+}
+function setMeter(el,val,max,warnAt){el.textContent=el.dataset.meter==='igtags'?`# ${val} / ${max}`:`${val} / ${max}`;el.className='meter '+(val>max?'bad':val>=warnAt?'warn':'ok');}
+function updateMeters(P){
+ const ig=$('[data-out="ig"]',P).value, x=$('[data-out="x"]',P).value;
+ setMeter($('[data-meter="ig"]',P),graphemes(ig).length,2200,2000);
+ setMeter($('[data-meter="igtags"]',P),(ig.match(/#[\p{L}\p{N}_]+/gu)||[]).length,30,26);
+ setMeter($('[data-meter="x"]',P),xCount(x),280,260);
+}
+function updateCounts(P){
+ $$('[data-count]',P).forEach(c=>{const f=$(`[data-f="${c.dataset.count}"]`,P);const max=+f.getAttribute('maxlength');const l=f.value.length;c.textContent=`${l} / ${max}`;c.classList.toggle('near',l>=max*0.9);});
+}
+
+/* ---------- state per template ---------- */
+const tById=id=>T.find(t=>t.id===id);
+const panelOf=id=>$('#panel-'+id);
+function readValues(t){const P=panelOf(t.id),v={};$$('[data-f]',P).forEach(el=>v[el.dataset.f]=el.value);return v;}
+function writeValues(t,v){const P=panelOf(t.id);$$('[data-f]',P).forEach(el=>{if(el.tagName==='SELECT'){el.value=v[el.dataset.f]||el.options[0].value;}else el.value=v[el.dataset.f]||'';});syncDynamic(t);updateCounts(P);}
+function syncDynamic(t){
+ const P=panelOf(t.id);
+ const tipoSel=$('[data-f="tipo"]',P);
+ const idx=tipoSel?tipoSel.selectedIndex:0;
+ t.fields.filter(f=>f.byTipo).forEach(f=>{$(`label[for="${t.id}-${f.id}"] .lt`,P).textContent=f.byTipo[idx]||f.label;});
+ const premio=$('[data-f="premio"]',P);if(premio)premio.closest('.field').hidden=tipoSel.value!=='Premio recibido';
+ const c=ctx(t,{});
+ $('[data-fixed]',P).innerHTML=c.tagsIG.split(' ').filter(Boolean).map(h=>`<span class="chip">${esc(h)}</span>`).join('')||'<span class="note">Ninguno (configúralos en Inicio)</span>';
+}
+function generate(t,quiet){
+ const P=panelOf(t.id),v=readValues(t),c=ctx(t,v);
+ $('[data-out="ig"]',P).value=tidy(t.ig(v,c));
+ $('[data-out="x"]',P).value=tidy(t.x(v,c));
+ updateMeters(P);persist(t);
+ if(!quiet)toast('Textos generados');
+}
+function persist(t){const P=panelOf(t.id);store.drafts[t.id]={v:readValues(t),ig:$('[data-out="ig"]',P).value,x:$('[data-out="x"]',P).value,example:!$('[data-banner]',P).hidden};save();}
+
+/* ---------- photos ---------- */
+function bindPhotos(t){
+ const P=panelOf(t.id);
+ const recount=()=>{$('[data-phcount]',P).textContent=$$('.slot.has',P).length;};
+ $$('[data-ph]',P).forEach(inp=>{
+  const slot=inp.closest('.slot'),img=$('.slot-img',slot);
+  inp.addEventListener('change',()=>{
+   const f=inp.files&&inp.files[0];if(!f)return;
+   if(slot._url)URL.revokeObjectURL(slot._url);
+   slot._url=URL.createObjectURL(f);slot._name=f.name;
+   img.style.backgroundImage=`url("${slot._url}")`;slot.classList.add('has');
+   if(!$('.slot-x',slot)){const b=document.createElement('button');b.type='button';b.className='slot-x';b.textContent='Quitar';
+    b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();URL.revokeObjectURL(slot._url);slot._url=null;slot._name=null;img.style.backgroundImage='';slot.classList.remove('has');inp.value='';b.remove();recount();});
+    slot.appendChild(b);}
+   recount();
+  });
+ });
+}
+
+/* ---------- copy / email / toast ---------- */
+let toastT;
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2200);}
+function copyText(text,fallbackEl,msg){
+ const fb=()=>{if(fallbackEl){fallbackEl.focus();fallbackEl.select();}try{document.execCommand('copy');toast(msg);}catch(e){toast('Selecciona el texto y cópialo con Ctrl+C');}};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast(msg),fb);}else fb();
+}
+function mail(t){
+ const P=panelOf(t.id),v=readValues(t),S=store.settings;
+ let ig=$('[data-out="ig"]',P).value,x=$('[data-out="x"]',P).value;
+ if(!ig&&!x){generate(t,true);ig=$('[data-out="ig"]',P).value;x=$('[data-out="x"]',P).value;}
+ const fotos=$$('.slot.has',P).map(s=>s._name);
+ const subject=`[RRSS ${tr(S.name)||'GALENO'}] ${t.name}${has(t.subject(v))?' – '+tr(t.subject(v)):''}`;
+ const body=`Tipo de publicación: ${t.name}\n\n===== INSTAGRAM =====\n${ig}\n\n===== X =====\n${x}\n\n===== FOTOS =====\n${fotos.length?fotos.map((n,i)=>`${i+1}. ${n}`).join('\n')+'\n(Adjuntar al correo)':'Sin fotos seleccionadas'}`;
+ const box=$('[data-mailbox]',P);
+ const email=tr(S.email);
+ copyText(subject+'\n\n'+body,null,'Texto copiado al portapapeles');
+ const href='mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body.length>1600?'Pega aquí el texto copiado (Ctrl+V / Cmd+V).':body);
+ box.hidden=false;
+ if(email){try{location.href=href;}catch(e){}}
+ box.innerHTML=email
+  ?`<b>Envío por email</b><ol><li>El texto ya está copiado.</li><li><a href="${esc(href)}">Abrir el correo</a> o escribe a <span class="addr">${esc(email)}</span></li><li>Si el correo aparece vacío, pega el texto (Ctrl+V).</li><li>Adjunta ${fotos.length?'las '+fotos.length+' fotos':'las fotos'} antes de enviar.</li></ol>`
+  :`<b>Falta el correo de destino.</b><span>El texto ya está copiado. Añade el correo de la persona que gestiona las redes en <button class="btn small" data-go="inicio">Inicio › Ajustes del grupo</button></span>`;
+}
+
+/* ---------- wire panels ---------- */
+T.forEach(t=>{
+ const P=panelOf(t.id),form=$('form',P),banner=$('[data-banner]',P);
+ const d=store.drafts[t.id];
+ const firstVisit=Object.keys(store.drafts).length===0;
+ if(d){writeValues(t,d.v);$('[data-out="ig"]',P).value=d.ig||'';$('[data-out="x"]',P).value=d.x||'';banner.hidden=!d.example;}
+ else if(firstVisit&&t.id==='publicacion'){writeValues(t,t.example);banner.hidden=false;generate(t,true);}
+ else writeValues(t,{});
+ updateMeters(P);bindPhotos(t);
+ form.addEventListener('input',e=>{if(e.target.matches('[data-f]')){updateCounts(P);if(!banner.hidden){banner.hidden=true;}persist(t);}});
+ form.addEventListener('change',e=>{if(e.target.matches('select[data-f]'))syncDynamic(t);persist(t);});
+ form.addEventListener('submit',e=>{e.preventDefault();generate(t);if(innerWidth<=960)$('.aside',P).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
+ $$('[data-out]',P).forEach(o=>o.addEventListener('input',()=>{updateMeters(P);persist(t);}));
+ P.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const act=b.dataset.act;
+  if(act==='gen')generate(t);
+  else if(act==='mail')mail(t);
+  else if(act==='example'){writeValues(t,t.example);banner.hidden=false;generate(t,true);toast('Ejemplo cargado');}
+  else if(act==='clear'){writeValues(t,{});$$('[data-out]',P).forEach(o=>o.value='');banner.hidden=true;$('[data-mailbox]',P).hidden=true;updateMeters(P);persist(t);toast('Formulario vacío');}
+  else if(b.dataset.copy){const o=$(`[data-out="${b.dataset.copy}"]`,P);if(!o.value){toast('Primero genera los textos');return;}copyText(o.value,o,b.dataset.copy==='ig'?'Texto de Instagram copiado':'Texto de X copiado');}
+ });
+});
+
+/* settings */
+$('#panel-inicio').addEventListener('input',e=>{const k=e.target.dataset.set;if(!k)return;store.settings[k]=e.target.value;save();T.forEach(syncDynamic);});
+
+/* ---------- tabs ---------- */
+function show(id){
+ if(!TABS.some(t=>t.id===id))id='inicio';
+ $$('.tab').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===id)));
+ $$('.panel').forEach(p=>p.hidden=p.id!=='panel-'+id);
+ const tb=$('#tab-'+id);tb&&tb.scrollIntoView({block:'nearest',inline:'nearest'});
+ try{history.replaceState(null,'','#'+id);}catch(e){}
+ try{localStorage.setItem('galeno-rrss-tab',id);}catch(e){}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tab],[data-go]');if(!b)return;show(b.dataset.tab||b.dataset.go);if(b.dataset.go)window.scrollTo({top:0});});
+tabsEl.addEventListener('keydown',e=>{
+ if(!['ArrowRight','ArrowLeft'].includes(e.key))return;
+ const bs=$$('.tab'),i=bs.indexOf(document.activeElement);if(i<0)return;
+ const n=bs[(i+(e.key==='ArrowRight'?1:-1)+bs.length)%bs.length];n.focus();show(n.dataset.tab);
+});
+let start=(location.hash||'').slice(1);
+if(!start){try{start=localStorage.getItem('galeno-rrss-tab')||'';}catch(e){}}
+show(start||'inicio');
+})();
+</script>
+
+</body>
+</html>
